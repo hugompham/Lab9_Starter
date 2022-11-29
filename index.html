@@ -21,7 +21,16 @@
       width: 60px;
     }
 
-    output {
+    .answer {
+      border: 1px solid gray;
+      display: block;
+      height: 18px;
+      margin-top: 5px;
+      padding: 5px;
+      width: 240px;
+    }
+
+    .time {
       border: 1px solid gray;
       display: block;
       height: 18px;
@@ -64,7 +73,8 @@
         <input name="second-num" id="second-num" />
         <button id="calculate">Calculate</button>
         <br />
-        <output></output>
+        <output class="answer"></output>
+        <output class="time"></output>
       </fieldset>
     </form>
 
@@ -87,21 +97,173 @@
     </section>
   </main>
 
+  <!-- Installing TrackJS -->
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
-    let form = document.querySelector('form');
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+    window.TrackJS && TrackJS.install({ 
+      token: "43716eefb07e4dcdac0803e881ed349d"
+      // for more configuration options, see https://docs.trackjs.com
     });
+    TrackJS.track('Testing TrackJS!');
+  </script>
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+  <!-- Script for buttons and testers -->
+  <script>
+  // try, catch, finally
+let form = document.querySelector("form");
+let synError = new SyntaxError("Invalid");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  let start = Date.now();
+  let answer = document.getElementsByClassName("answer");
+  let time = document.getElementsByClassName("time");
+  let firstNum = document.querySelector("#first-num").value;
+  let secondNum = document.querySelector("#second-num").value;
+  let operator = document.querySelector("#operator").value;
+  try {
+    answer[0].innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+  } catch (err) {
+    answer[0].innerHTML = "ERROR";
+    if (err instanceof SyntaxError) {
+      alert("Syntax Error:  " + err.message);
+    } else {
+      throw err;
+    }
+  } finally {
+    finalTime = Date.now() - start;
+  }
+  time[0].innerHTML = `Calculation took ${finalTime}ms.`;
+});
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+let errorBtns = Array.from(document.querySelectorAll("#error-btns > button"));
+
+// Console Log Button
+let logBtn = errorBtns[0];
+logBtn.addEventListener("click", (e) => {
+  console.log("Console Log Demo");
+});
+
+// Console Error Button
+let errorBtn = errorBtns[1];
+errorBtn.addEventListener("click", (e) => {
+  console.error("Console Error Demo");
+});
+
+// Console Count Button
+let countBtn = errorBtns[2];
+countBtn.addEventListener("click", (e) => {
+  console.count(`Count Button`);
+});
+
+// Console Warn Button
+let warnBtn = errorBtns[3];
+warnBtn.addEventListener("click", (e) => {
+  console.warn("Console Warn Button");
+});
+
+// Console Assert Button
+let assertBtn = errorBtns[4];
+assertBtn.addEventListener("click", (e) => {
+  const number = 2;
+  const errorMsg = "The number does not equal 3";
+  console.assert(number == 3, { number, errorMsg });
+});
+
+// Console Clear Button
+let clearBtn = errorBtns[5];
+clearBtn.addEventListener("click", (e) => {
+  console.clear();
+});
+
+// Console Dir Button
+let dirBtn = errorBtns[6];
+dirBtn.addEventListener("click", (e) => {
+  console.dir(dirBtn);
+});
+
+// Console dirxml Button
+let dirxmlBtn = errorBtns[7];
+dirxmlBtn.addEventListener("click", (e) => {
+  console.dirxml(dirxmlBtn);
+});
+
+// Console Group Start Button
+let groupStartBtn = errorBtns[8];
+groupStartBtn.addEventListener("click", (e) => {
+  console.group("console.group");
+});
+
+// Console Group End Button
+let groupEndBtn = errorBtns[9];
+groupEndBtn.addEventListener("click", (e) => {
+  console.groupEnd("console.group");
+});
+
+// Console Table Button
+let tableBtn = errorBtns[10];
+tableBtn.addEventListener("click", (e) => {
+  const classes = [
+    {
+      name: "Software Engineering",
+      num: "110"
+    },
+    {
+      name: "Programming Language",
+      num: "130"
+    },
+    {
+      name: "Advanced Software Engineering",
+      num: "112"
+    }
+  ];
+  console.table(classes);
+});
+
+// Console Start Timer Button
+let startTimerBtn = errorBtns[11];
+startTimerBtn.addEventListener("click", (e) => {
+  console.time("Timer Button");
+});
+
+// Console End Timer Button
+let endTimerBtn = errorBtns[12];
+endTimerBtn.addEventListener("click", (e) => {
+  console.timeEnd("Timer Button");
+});
+
+// Console Trace Button
+let traceBtn = errorBtns[13];
+traceBtn.addEventListener("click", (e) => {
+  const deepest = () => {
+    console.trace();
+  };
+  const deep = () => {
+    deepest();
+  };
+  const handleBtnClick = () => {
+    deep();
+  };
+  handleBtnClick();
+});
+
+// Console Global Error Button
+let globalErrBtn = errorBtns[14];
+globalErrBtn.addEventListener("click", (e) => {
+  console.log("Oops an error happened!");
+  $(function(){
+    let nothing = "0";
+  });
+});
+
+
+let errorExp = {};
+errorExp.registerErrorHandler = function () {
+  if (window.onerror){
+    console.log("Found an onerror!")
+  }
+}
+
+errorExp.registerErrorHandler();
   </script>
 </body>
 
